@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drive Auditor — Privacy Policy</title>
+    <style>
+        body {
+            font-family: Georgia, serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 24px;
+            color: #222;
+            line-height: 1.7;
+        }
+        h1 { font-size: 2em; margin-bottom: 0.2em; }
+        h2 { font-size: 1.2em; margin-top: 2em; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+        .meta { color: #666; font-size: 0.9em; margin-bottom: 2em; }
+        a { color: #1a73e8; }
+        ul { padding-left: 1.4em; }
+        li { margin-bottom: 0.4em; }
+    </style>
+</head>
+<body>
+
+<h1>Drive Auditor — Privacy Policy</h1>
+<p class="meta">Last updated: April 2026</p>
+
+<h2>What is Drive Auditor?</h2>
+<p>Drive Auditor is a Google Workspace™ Add-on that runs entirely inside your own Google account. It searches your Google Drive™ and Shared Drives for files matching a search string, and writes the results — including who has access to each file — to a new tab in a Google Sheets™ spreadsheet.</p>
+
+<h2>What data does Drive Auditor access?</h2>
+<p>Drive Auditor accesses the following data inside your Google account:</p>
+<ul>
+    <li><strong>File metadata</strong> — name, ID, link, created/modified dates, MIME type, size, description, and parent drive for files matching your search.</li>
+    <li><strong>File content (Community edition only)</strong> — the Community edition uses the <code>drive.readonly</code> scope to support full-text content search. The Marketplace edition uses the narrower <code>drive.metadata.readonly</code> scope and does not read file contents.</li>
+    <li><strong>Sharing permissions</strong> — for each file matching your search, Drive Auditor reads the list of users, groups, and link-sharing settings, so it can populate the "Shared With", "External Sharing", and "Risk Flag" columns in the results sheet.</li>
+    <li><strong>Shared Drives</strong> — Drive Auditor lists the Shared Drives you have access to so you can choose which ones to search.</li>
+    <li><strong>Google Sheets™</strong> — to write the <code>myDrives</code> control sheet and your search results to the spreadsheet the add-on is installed in.</li>
+</ul>
+
+<h2>Is any data sent outside my Google account?</h2>
+<p><strong>No.</strong> Drive Auditor does not transmit, store, share, or sell any data outside of your Google account. All processing happens entirely within your own Google account using Google Apps Script™. No external servers, databases, or third-party services are involved.</p>
+
+<h2>Does Drive Auditor store my data?</h2>
+<p>The only place Drive Auditor stores data is inside the Google Sheets™ spreadsheet in your own Google Drive™. The list of Shared Drives, your search results, and any cached UI state (like the "Search My Drive" toggle) are all written to that spreadsheet or to the script's local properties for the spreadsheet, and stay there. Drive Auditor does not maintain any database or storage outside of your Google account.</p>
+
+<h2>Does Drive Auditor modify or delete any files?</h2>
+<p><strong>No.</strong> Drive Auditor uses read-only scopes. It cannot create, modify, move, or delete any file or folder in your Drive. The "Shared With" and "Risk Flag" columns are reporting tools — to actually change a file's sharing settings, you click the file's link to open it in Drive and use Drive's native sharing controls.</p>
+<p>Future Pro features such as bulk permission remediation will require write scopes and will be clearly disclosed before they are added.</p>
+
+<h2>What permissions does Drive Auditor require, and why?</h2>
+<ul>
+    <li><strong>drive.readonly (Community edition)</strong> — needed to perform full-text content search across your Drive and to read file metadata and permissions.</li>
+    <li><strong>drive.metadata.readonly (Marketplace edition)</strong> — needed to list files and read their permissions, without ever reading file contents. This is a narrower scope than the Community edition uses.</li>
+    <li><strong>spreadsheets.currentonly</strong> — needed to read and write the <code>myDrives</code> control sheet and the results tabs in the spreadsheet the add-on is installed in.</li>
+    <li><strong>script.container.ui</strong> — needed to display the custom menu and the search sidebar inside Google Sheets™.</li>
+    <li><strong>script.external_request</strong> — needed to call the Drive API v3 endpoints directly via <code>UrlFetchApp</code>.</li>
+</ul>
+
+<h2>Who built Drive Auditor?</h2>
+<p>Drive Auditor is an independent add-on developed by an individual developer. It is not affiliated with, endorsed by, or associated with Google LLC.</p>
+
+<h2>Changes to this policy</h2>
+<p>If this privacy policy changes, the updated version will be posted at this URL with a revised "Last updated" date.</p>
+
+<h2>Contact</h2>
+<p>If you have any questions about this privacy policy or how Drive Auditor handles your data, please open an issue on the GitHub repository.</p>
+
+<p style="font-size:0.8em; color:#666; margin-top:2em;">
+Google Drive™, Google Sheets™, Google Workspace™, and
+Google Apps Script™ are trademarks of Google LLC.
+Drive Auditor is not affiliated with or endorsed by Google LLC.
+</p>
+
+</body>
+</html>
