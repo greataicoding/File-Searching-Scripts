@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drive Auditor — Search & Audit Your Google Drives</title>
+    <meta name="description" content="A Google Workspace add-on that searches your Shared Drives and My Drive for files matching any string, and reports who has access to each file.">
+    <style>
+        body {
+            font-family: Georgia, serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 24px;
+            color: #222;
+            line-height: 1.7;
+        }
+        h1 { font-size: 2em; margin-bottom: 0.2em; }
+        h2 { font-size: 1.2em; margin-top: 2em; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+        h3 { font-size: 1.05em; margin-top: 1.4em; margin-bottom: 0.3em; }
+        .meta { color: #666; font-size: 0.9em; margin-bottom: 2em; }
+        a { color: #1a73e8; }
+        ul { padding-left: 1.4em; }
+        li { margin-bottom: 0.4em; }
+        .tagline {
+            font-size: 1.1em;
+            color: #444;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .warning-box {
+            background: #fff8e1;
+            border-left: 4px solid #f9ab00;
+            padding: 14px 18px;
+            margin: 1.5em 0;
+            font-size: 0.95em;
+        }
+        .warning-box strong { color: #c47b00; }
+        .links-row {
+            margin: 2em 0;
+            padding: 16px 20px;
+            background: #f5f5f5;
+            border-radius: 6px;
+        }
+        .links-row a { display: inline-block; margin-right: 18px; }
+        code {
+            background: #f1f3f4;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Drive Auditor</h1>
+<p class="tagline">Search every Google Drive you have access to — and find out who else has access too.</p>
+
+<p>Drive Auditor is a Google Workspace™ Add-on that searches across all your Google Shared Drives (and optionally your personal My Drive) for files matching a search string, and writes the results to a Google Sheets™ spreadsheet — including the dates, file types, sharing permissions, and a flag for files shared externally.</p>
+
+<p>It's a reporting tool, built for people who need to know <em>where</em> something lives in their Drive estate and <em>who</em> can see it. Useful for tidying up after departed contractors, auditing what's been shared with personal Gmail addresses, or just finding that one file someone swears exists somewhere in the company drives.</p>
+
+<div class="links-row">
+    <a href="https://github.com/greataicoding/file-searching-scripts">View on GitHub</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="terms-of-service.html">Terms of Service</a>
+</div>
+
+<h2>What It Does</h2>
+<ul>
+    <li><strong>Searches across all your Shared Drives at once</strong> — auto-discovers every Shared Drive you have access to, then lets you tick which ones to include.</li>
+    <li><strong>Full-text or title-only search</strong> — find files by content, exact phrase (<code>"Q3 budget"</code>), or title only (<code>title:budget</code>).</li>
+    <li><strong>Files, folders, or both</strong> — pick what you want to find with simple checkboxes.</li>
+    <li><strong>Reports who has access</strong> — every result row lists the named users and groups with permissions on the file.</li>
+    <li><strong>Flags external sharing</strong> — files shared with "Anyone with the link" or with users outside your organisation are flagged so you can spot them at a glance.</li>
+    <li><strong>Clickable file links</strong> — open any file directly from the results sheet to review or update its sharing settings in Drive.</li>
+    <li><strong>Works on consumer Gmail too</strong> — if you don't have Shared Drives, it falls back to a simple "Search My Drive" mode.</li>
+</ul>
+
+<h2>How to Install</h2>
+<p>Drive Auditor is currently distributed as an open-source Apps Script project. Full installation steps are in the <a href="https://github.com/greataicoding/file-searching-scripts#setup--installation">README on GitHub</a>. The short version:</p>
+<ol>
+    <li>Create a new Google Sheets spreadsheet.</li>
+    <li>Open Extensions → Apps Script.</li>
+    <li>Copy the contents of <code>listFilesFound.gs</code>, <code>searchInput.html</code>, <code>css.html</code>, and <code>appsscript.json</code> from the repo.</li>
+    <li>Enable the Drive API advanced service (Services → Drive API → v3).</li>
+    <li>Reload the spreadsheet — the <strong>File Search</strong> menu will appear.</li>
+</ol>
+<p>A Google Workspace™ Marketplace edition is in development — once published, it'll be installable in one click.</p>
+
+<h2>Editions</h2>
+
+<h3>Community edition (current)</h3>
+<p>Open-source, manually installed, with the full feature set including external-sharing detection. Uses Google's <code>drive.readonly</code> scope to support full-text content search.</p>
+
+<h3>Marketplace Pro edition (in development)</h3>
+<p>One-click install via the Google Workspace™ Marketplace, with the narrower <code>drive.metadata.readonly</code> scope (no file content access). Plus Pro features:</p>
+<ul>
+    <li>Permission mining with a dedicated audit view</li>
+    <li>Organisation-aware risk detection (proper external-user flagging)</li>
+    <li>Scheduled snapshots — re-run searches every 24 hours and track what's changed</li>
+    <li>Bulk permission remediation — revoke access for a specific user across many files at once</li>
+</ul>
+
+<div class="warning-box">
+    <strong>About permissions:</strong> The Community edition requests Google's <code>drive.readonly</code> scope, which lets it read any file in your Drive and any Shared Drive you have access to. It's read-only — it can't modify, move, or delete anything — and all processing happens inside your own Google account. Nothing is sent anywhere external. The full code is open-source so you can verify exactly what it does. The forthcoming Marketplace edition will use the narrower <code>drive.metadata.readonly</code> scope, which avoids file content access entirely. <a href="https://github.com/greataicoding/file-searching-scripts#️-heads-up-drive-read-permissions">Read more about why these scopes are needed.</a>
+</div>
+
+<h2>Privacy & Data</h2>
+<p>Drive Auditor does not transmit, store, or share any data outside of your Google account. All searching, processing, and reporting happens entirely within Google Apps Script™ — there are no external servers, no databases, and no third-party services involved. See the <a href="privacy-policy.html">Privacy Policy</a> for full details.</p>
+
+<h2>Support</h2>
+<p>For questions, bug reports, or feature requests, please open an issue on the <a href="https://github.com/greataicoding/file-searching-scripts/issues">GitHub repository</a>.</p>
+
+<p style="font-size:0.8em; color:#666; margin-top:3em; padding-top:1em; border-top:1px solid #eee;">
+Drive Auditor is an independent open-source project. Google Drive™, Google Sheets™, Google Workspace™, and Google Apps Script™ are trademarks of Google LLC. Drive Auditor is not affiliated with or endorsed by Google LLC.
+</p>
+
+</body>
+</html>
