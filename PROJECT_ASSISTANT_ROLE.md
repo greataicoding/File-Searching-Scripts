@@ -2,7 +2,7 @@
 
 ## The Short Version
 
-Drive Auditor was built collaboratively between a human developer (Temple) and various AI tools; Gemini from Google, ChatGPT and, from Anthropic: **Claude** (via the web chat interface) and **Claude Code** (the CLI-based coding agent). This document is here so anyone looking at the repo understands how the code and docs came together.
+File Search & Auditor for Google Drive™ was built collaboratively between a human developer (Temple) and various AI tools; Gemini from Google, ChatGPT and, from Anthropic: **Claude** (via the web chat interface) and **Claude Code** (the CLI-based coding agent). This document is here so anyone looking at the repo understands how the code and docs came together.
 
 ---
 
