@@ -37,7 +37,7 @@ The Community edition requests `https://www.googleapis.com/auth/drive.readonly` 
 - [How It Works — The Big Picture](#how-it-works--the-big-picture)
 - [Scripts Overview](#scripts-overview)
 - [Setup & Installation](#setup--installation)
-- [Using Drive Auditor](#using-drive-auditor)
+- [Using the App](#using-the-app)
   - [Step 1: Open the Sidebar](#step-1-open-the-sidebar)
   - [Step 2: Pick Which Drives to Search](#step-2-pick-which-drives-to-search)
   - [Step 3: Run Your Search](#step-3-run-your-search)
@@ -63,7 +63,7 @@ The Community edition requests `https://www.googleapis.com/auth/drive.readonly` 
 
 ## What It Does
 
-Drive Auditor answers a simple question: **where in my Drives is that file, and who has access to it?**
+File Search & Auditor for Google Drive™ (the "App") answers a simple question: **where in my Drives is that file, and who has access to it?**
 
 It searches every Shared Drive you have access to (plus your personal My Drive if you tick the box) for files matching your search string, then produces a spreadsheet listing each match with its name, ID, link, dates, type, size, the drive it lives on, who it's shared with, and whether anyone outside your organisation has access.
 
@@ -92,7 +92,7 @@ This is especially useful when the **Risk Flag** column flags something as `⚠ 
 └──────────────────┘     └──────────────────┘     └──────────────────┘
 ```
 
-The first time you open the sidebar, Drive Auditor calls the Drive API to discover every Shared Drive you have access to and writes them into a sheet called `myDrives` with a tickbox next to each one. You decide which drives to search by ticking or unticking those boxes — no need to hunt down drive IDs by hand.
+The first time you open the sidebar, the App calls the Drive API to discover every Shared Drive you have access to and writes them into a sheet called `myDrives` with a tickbox next to each one. You decide which drives to search by ticking or unticking those boxes — no need to hunt down drive IDs by hand.
 
 ---
 
@@ -113,7 +113,7 @@ The project has one script file, one sidebar HTML file, and a manifest:
 
 ## Setup & Installation
 
-1. **Create a new Google Sheets spreadsheet** — this will be Drive Auditor's home base.
+1. **Create a new Google Sheets spreadsheet** — this will be the App's home base.
 
 2. **Open the script editor** — go to Extensions > Apps Script.
 
@@ -133,7 +133,7 @@ The project has one script file, one sidebar HTML file, and a manifest:
 
 ---
 
-## Using Drive Auditor
+## Using the App
 
 ### Step 1: Open the Sidebar
 

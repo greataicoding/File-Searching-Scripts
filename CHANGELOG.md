@@ -2,7 +2,7 @@
 
 > *Developed by Temple, Claude, Gemini and ChatGPT — see [PROJECT_ASSISTANT_ROLE.md](PROJECT_ASSISTANT_ROLE.md).*
 
-All notable changes to Drive Auditor are documented here.
+All notable changes to File Search & Auditor for Google Drive™ are documented here.
 
 ---
 
