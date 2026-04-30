@@ -1,4 +1,4 @@
-# Drive Auditor — File Search & Sharing Audit Tool
+# File Search & Auditor for Google Drive™ — File Search & Sharing Audit Tool
 
 > *Developed by Temple and Claude — a collaboration between a human developer and Anthropic's Claude (chat) and Claude Code. See [PROJECT_ASSISTANT_ROLE.md](PROJECT_ASSISTANT_ROLE.md) for how this project was built.*
 
