@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Search & Auditor for Google Drive™ — Support</title>
+    <meta name="description" content="Support, FAQs, and troubleshooting for the File Search & Auditor for Google Drive™ add-on.">
+    <style>
+        body {
+            font-family: Georgia, serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 24px;
+            color: #222;
+            line-height: 1.7;
+        }
+        h1 { font-size: 2em; margin-bottom: 0.2em; }
+        h2 { font-size: 1.2em; margin-top: 2em; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+        h3 { font-size: 1.05em; margin-top: 1.4em; margin-bottom: 0.3em; }
+        .meta { color: #666; font-size: 0.9em; margin-bottom: 2em; }
+        a { color: #1a73e8; }
+        ul { padding-left: 1.4em; }
+        li { margin-bottom: 0.4em; }
+        .tagline {
+            font-size: 1.1em;
+            color: #444;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .contact-box {
+            background: #f5f5f5;
+            border-left: 4px solid #1a73e8;
+            padding: 14px 18px;
+            margin: 1.5em 0;
+            font-size: 0.95em;
+        }
+        code {
+            background: #f1f3f4;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<h1>File Search & Auditor for Google Drive™ — Support</h1>
+<p class="tagline">Help, FAQs, and how to report a problem with File Search & Auditor for Google Drive™.</p>
+
+<div class="contact-box">
+    <strong>Need help?</strong> The fastest way to get support is by email — drop a line to <a href="mailto:greataicoding@gmail.com">greataicoding@gmail.com</a> with a description of the problem (and a screenshot if you can).
+</div>
+
+<h2>Reporting a Bug</h2>
+<p>If something isn't working as expected, please include the following so the issue can be diagnosed quickly:</p>
+<ul>
+    <li>What you were trying to do, and what happened instead.</li>
+    <li>Whether you're on a Google Workspace™ account or a consumer Gmail account (My Drive only mode).</li>
+    <li>The exact search string you used.</li>
+    <li>Which search options were ticked: <strong>Include Files</strong> and/or <strong>Include Folders</strong>, and which search mode (default words, <code>"exact phrase"</code>, or <code>title:</code>).</li>
+    <li>Any error messages from the sidebar (they appear in red below the search box).</li>
+    <li>Any error messages from the Apps Script execution log (Extensions &rarr; Apps Script &rarr; Executions).</li>
+</ul>
+
+<h2>Requesting a Feature</h2>
+<p>Suggestions are welcome — particularly around how the search results sheet is laid out, what columns would be most useful, or what extra audit/risk-detection features would help in real-world use. Open a feature request by email <a href="mailto:greataicoding@gmail.com">greataicoding@gmail.com</a> with the details.</p>
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>Why does the search take so long on large drives?</h3>
+<p>Each search has to call the Google Drive™ API once per page of results (up to 100 files at a time) for every drive you've ticked in the <code>myDrives</code> sheet. For very large drives or broad searches, this can take several minutes. Apps Script also has a hard execution time limit — 6 minutes for consumer Gmail accounts and 30 minutes for Google Workspace™ — and a search across many large drives may approach this. If it does, the sidebar will show a timeout error; try narrowing the search or unticking some drives in <code>myDrives</code>.</p>
+
+<h3>Why does the "Risk Flag" column flag every named user as external?</h3>
+<p>The Risk Flag uses the <code>ORG_DOMAIN</code> constant at the top of <code>listFilesFound.gs</code>. While that constant is left blank, the App can't tell what counts as "internal" to your organisation — so it conservatively flags every named user/group permission. Set <code>ORG_DOMAIN</code> to your organisation's email domain (e.g. <code>"mycompany.com"</code>) and the flag will only fire for emails outside that domain.</p>
+
+<h3>I added a new Shared Drive, but it's not in the myDrives sheet. What do I do?</h3>
+<p>Open the search sidebar and click the <strong>&#x21BB; Refresh Drives</strong> button. This rebuilds the <code>myDrives</code> sheet from scratch, picking up any new Shared Drives you've been added to since the last time you opened the sidebar.</p>
+
+<h3>I'm on a personal Gmail account — does this work for me?</h3>
+<p>Yes. If the App detects you have no Shared Drives (typical for consumer Gmail accounts), the sidebar will switch to a simple "Search My Drive" mode with a single tickbox. Searches then run across your personal Drive only.</p>
+
+<h3>Does the App modify or delete any files?</h3>
+<p>No. The App uses read-only scopes and is purely a reporting tool. To change a file's sharing settings, click the file's link in the results sheet to open it in Google Drive™, then use Drive's native sharing controls. See the <a href="privacy-policy.html">Privacy Policy</a> for full details on what data the App accesses and how.</p>
+
+<h3>I tried to search and got "No Records Found", but I know the file exists.</h3>
+<p>A few things to check:</p>
+<ul>
+    <li>Is the drive containing the file ticked in the <code>myDrives</code> sheet? Untick rows you don't want to search and tick the ones you do.</li>
+    <li>Are <strong>Include Files</strong> and/or <strong>Include Folders</strong> ticked appropriately for what you're looking for?</li>
+    <li>If you're searching file content (default mode), Google Drive™ may not yet have indexed very recently uploaded files. Try searching by name using the <code>title:</code> prefix instead.</li>
+    <li>If you used <code>"exact phrase"</code> mode, double-check the exact wording — even one different character will cause it to miss.</li>
+</ul>
+
+<h2>Privacy & Data</h2>
+<p>The App does not transmit, store, or share any data outside of your Google account. All searching, processing, and reporting happens entirely within Google Apps Script™ — there are no external servers, no databases, and no third-party services involved. See the <a href="privacy-policy.html">Privacy Policy</a> for full details.</p>
+
+<h2>Other Pages</h2>
+<ul>
+    <li><a href="index.html">About the App</a></li>
+    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+    <li><a href="terms-of-service.html">Terms of Service</a></li>
+</ul>
+
+<p style="font-size:0.8em; color:#666; margin-top:3em; padding-top:1em; border-top:1px solid #eee;">
+File Search & Auditor for Google Drive™ is an independent open-source project. Google Drive™, Google Sheets™, Google Workspace™, and Google Apps Script™ are trademarks of Google LLC. The App is not affiliated with or endorsed by Google LLC.
+</p>
+
+</body>
+</html>
