@@ -1,0 +1,432 @@
+<!--
+  File Search & Auditor for Google Drive™ — Search Sidebar UI
+  ----------------------------------------
+  Copyright © 2026 Temple Rodgers. All rights reserved.
+
+  Author:  Temple Rodgers
+  Contact: GreatAICoding@gmail.com
+  Licence: Proprietary — not for redistribution without permission.
+
+  Part of the GreatAICoding family of Google Workspace tools.
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    ...<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top"> <style>
+      /* ---------------------------------------------------------------
+         General page reset and font — match Google Workspace's look
+      --------------------------------------------------------------- */
+      * {
+        box-sizing: border-box; /* include padding/border in element width calculations */
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Google Sans', Roboto, Arial, sans-serif; /* match the Google Workspace font stack */
+        font-size: 13px;    /* standard Google Sheets sidebar font size */
+        color: #202124;     /* Google's standard dark text colour */
+        padding: 16px;      /* breathing room around all sidebar content */
+        background: #fff;   /* plain white background */
+      }
+
+      /* ---------------------------------------------------------------
+         Search input field
+      --------------------------------------------------------------- */
+      label {
+        display: block;           /* label sits on its own line above the input */
+        font-weight: 500;         /* slightly bold — matches Google form labels */
+        margin-bottom: 6px;       /* gap between label and input */
+        color: #3c4043;           /* slightly softer than full black */
+      }
+
+      input[type="text"] {
+        width: 100%;              /* fill the full sidebar width */
+        padding: 8px 10px;        /* comfortable click/tap target */
+        border: 1px solid #dadce0; /* Google's standard input border colour */
+        border-radius: 4px;       /* subtle rounding to match Workspace style */
+        font-size: 13px;          /* match body font size */
+        color: #202124;           /* same dark text as the rest of the UI */
+        outline: none;            /* remove the default browser focus ring — we add our own below */
+        transition: border-color 0.15s; /* smooth colour change when focused */
+      }
+
+      input[type="text"]:focus {
+        border-color: #1a73e8;    /* Google blue highlight when the field is active */
+      }
+
+      /* ---------------------------------------------------------------
+         Search Options Row (Files/Folders Checkboxes)
+      --------------------------------------------------------------- */
+      .options-row {
+        display: flex;            /* lay the checkboxes out side by side */
+        gap: 16px;                /* comfortable spacing between the options */
+        margin-top: 8px;          /* gap above the row */
+        margin-bottom: 12px;      /* gap below the row */
+        color: #3c4043;           /* match standard UI text colour */
+      }
+
+      .options-row label {
+        display: flex;            /* align checkbox and text horizontally */
+        align-items: center;      /* vertically center them */
+        gap: 6px;                 /* small gap between the box and the text */
+        font-weight: normal;      /* override the bold styling from the main title label */
+        cursor: pointer;          /* hand cursor on hover */
+        margin-bottom: 0;         /* override main label margin */
+      }
+
+      .options-row input[type="checkbox"] {
+        width: 14px;              /* neat, small checkbox size */
+        height: 14px;
+        cursor: pointer;          /* hand cursor on hover */
+        accent-color: #1a73e8;    /* Google blue tick/fill when checked */
+      }
+
+      /* ---------------------------------------------------------------
+         Buttons row
+      --------------------------------------------------------------- */
+      .button-row {
+        display: flex;            /* lay the two buttons out side by side */
+        gap: 8px;                 /* space between Search and Clear buttons */
+        margin-top: 12px;         /* gap above the button row */
+      }
+
+      button {
+        flex: 1;                  /* both buttons share the available width equally */
+        padding: 8px 0;           /* vertical padding for a comfortable click target */
+        border: none;             /* remove default browser button border */
+        border-radius: 4px;       /* match the input field rounding */
+        font-size: 13px;          /* match body font size */
+        font-weight: 500;         /* slightly bold button labels */
+        cursor: pointer;          /* show the hand cursor on hover */
+        transition: background 0.15s, opacity 0.15s; /* smooth hover and disabled transitions */
+      }
+
+      #btnSearch {
+        background: #1a73e8;      /* Google blue — primary action */
+        color: #fff;              /* white label on blue background */
+      }
+
+      #btnSearch:hover:not(:disabled) {
+        background: #1765cc;      /* slightly darker blue on hover */
+      }
+
+      #btnSearch:disabled {
+        opacity: 0.6;             /* dim the button while a search is running */
+        cursor: not-allowed;      /* show the blocked cursor so user knows it's busy */
+      }
+
+      #btnClear {
+        background: #f1f3f4;      /* Google's light grey — secondary action */
+        color: #3c4043;           /* dark grey label */
+      }
+
+      #btnClear:hover {
+        background: #e2e5e9;      /* slightly darker grey on hover */
+      }
+
+      /* ---------------------------------------------------------------
+         Status / results message area
+      --------------------------------------------------------------- */
+      #displayReturn {
+        margin-top: 14px;         /* gap between the buttons and the status message */
+        min-height: 20px;         /* reserve space so the layout doesn't jump */
+        font-size: 13px;          /* match body font size */
+        line-height: 1.5;         /* comfortable reading line height */
+      }
+
+      /* Spinner shown while search is running */
+      #spinner {
+        display: none;            /* hidden by default — shown via JS during a search */
+        align-items: center;      /* vertically centre the spinner and its label */
+        gap: 8px;                 /* space between the spinner and the "Searching…" text */
+        margin-top: 14px;         /* match the status message top gap */
+        color: #5f6368;           /* muted grey for the loading text */
+      }
+
+      /* The spinning circle — pure CSS, no image needed */
+      .spin {
+        width: 16px;
+        height: 16px;
+        border: 2px solid #dadce0;          /* light grey ring */
+        border-top-color: #1a73e8;          /* blue leading edge */
+        border-radius: 50%;                 /* make it circular */
+        animation: rotate 0.7s linear infinite; /* spin continuously */
+        flex-shrink: 0;                     /* don't let the circle squash inside a flex row */
+      }
+
+      @keyframes rotate {
+        to { transform: rotate(360deg); }  /* one full clockwise rotation per cycle */
+      }
+
+      /* ---------------------------------------------------------------
+         Init loading state — shown while detectDrives() is running
+      --------------------------------------------------------------- */
+      .init-spinner-row {
+        display: flex;       /* lay the spin circle and the text side by side */
+        align-items: center; /* vertically centre the two items */
+        gap: 8px;            /* space between the spinner and the label */
+        color: #5f6368;      /* muted grey — same as the search spinner text */
+      }
+
+      /* ---------------------------------------------------------------
+         Drives note — shown after shared drives are detected
+      --------------------------------------------------------------- */
+      .drive-hint {
+        margin-top: 10px;  /* gap between the search input and this note */
+        font-size: 12px;   /* slightly smaller than body text — it's supplementary info */
+        color: #5f6368;    /* muted grey so it doesn't compete with the search field */
+        line-height: 1.5;  /* comfortable reading line height */
+      }
+
+      .drive-hint p {
+        margin-bottom: 6px; /* gap between the hint text and the Refresh button */
+      }
+
+      /* Refresh Drives button — compact secondary style, not a primary action */
+      #btnRefresh {
+        flex: none;               /* override the general button flex: 1 so it doesn't stretch */
+        padding: 4px 10px;        /* compact padding — this is a small helper button */
+        background: none;         /* no fill — low visual weight */
+        border: 1px solid #dadce0; /* subtle outline matching Google's input border */
+        border-radius: 4px;       /* match the rounding on other UI elements */
+        font-size: 12px;          /* smaller than the primary buttons */
+        font-weight: 500;         /* slightly bold label */
+        color: #1a73e8;           /* Google blue — clickable but not as loud as Search */
+        cursor: pointer;          /* hand cursor so it's obviously clickable */
+        transition: background 0.15s; /* smooth hover transition */
+      }
+
+      #btnRefresh:hover {
+        background: #e8f0fe; /* very light Google blue tint on hover */
+      }
+
+      /* ---------------------------------------------------------------
+         My Drive toggle row — shown when no shared drives are found
+      --------------------------------------------------------------- */
+      .toggle-row {
+        display: flex;        /* lay the checkbox and label text side by side */
+        align-items: center;  /* vertically centre them */
+        gap: 8px;             /* space between the checkbox and the "Search My Drive" text */
+        margin-top: 10px;     /* gap between the search input and this row */
+        font-size: 13px;      /* match the body font size */
+        color: #3c4043;       /* match the label text colour */
+      }
+
+      .toggle-row input[type="checkbox"] {
+        width: 15px;              /* consistent checkbox size across browsers */
+        height: 15px;             /* consistent checkbox size across browsers */
+        cursor: pointer;          /* hand cursor on the checkbox itself */
+        accent-color: #1a73e8;    /* Google blue tick/fill when checked */
+        flex-shrink: 0;           /* don't let the checkbox shrink in the flex row */
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div id="initLoading">
+      <div class="init-spinner-row"> <div class="spin"></div> <span id="initLoadingText">Detecting drives&hellip;</span> </div>
+    </div>
+
+    <div id="searchUI" style="display:none">
+
+      <label id="searchLabel" for="searchString">Search shared drives</label>
+      <input
+        type="text"
+        id="searchString"
+        placeholder="e.g. Q3 budget report"
+        autocomplete="off"
+      />
+      <div style="font-size: 11px; color: #666; margin-top: 4px;">
+        <i>Tip: Use "quotes" for an exact phrase (e.g. "Q3 Report") or <b>title:</b> to search titles only.</i>
+      </div>
+
+      <div class="options-row">
+        <label><input type="checkbox" id="chkFiles" checked> Include Files</label>
+        <label><input type="checkbox" id="chkFolders"> Include Folders</label>
+      </div>
+
+      <div id="drivesModeNote" class="drive-hint" style="display:none">
+        <p>Drives loaded into the myDrives sheet &mdash; tick or untick rows there to choose what to search.</p>
+        <button id="btnRefresh" onclick="refreshDrives()">&#x21BB; Refresh Drives</button>
+        </div>
+
+      <div id="myDriveMode" style="display:none">
+        <div class="toggle-row">
+          <input type="checkbox" id="chkMyDrive" checked /> <span>Search My Drive</span>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button id="btnSearch" onclick="submitSearch()">Search</button>
+        <button id="btnClear"  onclick="clearSearch()">Clear</button>
+      </div>
+
+      <div id="spinner">
+        <div class="spin"></div>
+        <span>Searching&hellip;</span>
+      </div>
+
+      <div id="displayReturn"></div>
+
+    </div> </body>
+
+  <script>
+    /**
+     * window.onload — entry point: kicked off automatically as soon as the sidebar
+     * finishes loading. Calls detectDrives() on the Apps Script backend so we know
+     * whether the user has Shared Drives or is a My Drive-only (consumer Gmail) user.
+     * No parameters. No return value.
+     */
+    window.onload = function() {
+      google.script.run                    // call the Apps Script server
+        .withSuccessHandler(onDrivesDetected) // onDrivesDetected() handles the "found_shared_drives" / "my_drive_only" result
+        .withFailureHandler(handleError)      // handleError() handles any exception thrown by detectDrives()
+        .detectDrives();                      // run the drive detection function on the server side
+    };
+
+    /**
+     * onDrivesDetected — success handler for the detectDrives() call made on load
+     * and again when the user clicks Refresh Drives. Hides the loading spinner and
+     * reveals the appropriate search UI based on what detectDrives() returned.
+     *
+     * @param {string} result  Either "found_shared_drives" or "my_drive_only".
+     */
+    function onDrivesDetected(result) {
+      document.getElementById('initLoading').style.display = 'none';  // hide the "Detecting drives…" spinner now that we have an answer
+      document.getElementById('searchUI').style.display   = 'block';  // reveal the main search UI
+
+      const searchLabel = document.getElementById('searchLabel'); // grab the label element so we can update its text
+
+      if (result === 'found_shared_drives') {                          // the user has at least one Shared Drive
+        document.getElementById('drivesModeNote').style.display = 'block'; // show the myDrives hint and Refresh button
+        searchLabel.textContent = 'Search shared drives';              // set label text for Shared Drives users
+      } else {                                                         // "my_drive_only" — no Shared Drives (consumer Gmail user)
+        document.getElementById('myDriveMode').style.display = 'block';    // show the simple My Drive checkbox instead
+        searchLabel.textContent = 'Search My Drive';                   // update the label to reflect they are only searching My Drive
+      }
+
+      document.getElementById('searchString').focus(); // put the cursor in the search box so the user can type straight away
+    }
+
+    /**
+     * refreshDrives — called when the user clicks the "↻ Refresh Drives" button.
+     * Hides the search UI, re-shows the loading spinner with updated text, and
+     * re-runs detectDrives() so the myDrives sheet is rebuilt with the latest drives.
+     * No parameters. No return value.
+     */
+    function refreshDrives() {
+      document.getElementById('drivesModeNote').style.display = 'none'; // hide the drives note while we refresh so the UI is clean
+      document.getElementById('searchUI').style.display      = 'none';  // hide the entire search UI until detection completes again
+      document.getElementById('initLoadingText').textContent = 'Refreshing drives…'; // update the spinner label so the user knows this is a refresh, not the initial load
+      document.getElementById('initLoading').style.display   = 'block'; // re-show the loading spinner
+
+      google.script.run                    // call the Apps Script server again
+        .withSuccessHandler(onDrivesDetected) // same success handler as on initial load
+        .withFailureHandler(handleError)      // same error handler as on initial load
+        .detectDrives();                      // re-run detectDrives() to repopulate the myDrives sheet
+    }
+
+    /**
+     * submitSearch — reads the search box, shows the spinner, disables the Search
+     * button, then calls the Apps Script backend. In My Drive only mode, it first
+     * persists the toggle state via setSearchMyDrive() and then calls driveLister()
+     * in its success callback to ensure the preference is saved before searching.
+     * Pressing Enter in the text field also triggers this function.
+     */
+    function submitSearch() {
+      const searchString = document.getElementById('searchString').value.trim(); // grab the search text and remove any leading/trailing whitespace
+      const incFiles = document.getElementById('chkFiles').checked;              // read the Include Files checkbox
+      const incFolders = document.getElementById('chkFolders').checked;          // read the Include Folders checkbox
+
+      if (!searchString) {                                                       // don't fire a search if the box is empty
+        document.getElementById('displayReturn').innerHTML =
+          '<span style="color:#d93025">Please enter a search term.</span>';      // gentle red nudge so the user knows why nothing happened
+        return;                                                                  // bail out early — nothing to search
+      }
+
+      if (!incFiles && !incFolders) {                                            // user accidentally unchecked both options
+        document.getElementById('displayReturn').innerHTML =
+          '<span style="color:#d93025">Please select to search files, folders, or both.</span>'; // prompt them to choose one
+        return;
+      }
+
+      document.getElementById('displayReturn').innerHTML = '';                  // clear any previous result or error message
+      document.getElementById('spinner').style.display  = 'flex';              // show the animated search spinner
+      document.getElementById('btnSearch').disabled     = true;                 // disable Search so the user can't double-click mid-search
+
+      const isMyDriveMode = document.getElementById('myDriveMode').style.display !== 'none'; // true when the user has no Shared Drives and we're showing the My Drive toggle
+
+      if (isMyDriveMode) {                                                       // My Drive only mode — we need to save the toggle before searching
+        const myDriveChecked = document.getElementById('chkMyDrive').checked;   // read whether the My Drive checkbox is currently ticked
+
+        google.script.run                                    // first call: persist the toggle state to script properties
+          .withSuccessHandler(function() {                   // once the state is saved, kick off the actual search
+            google.script.run                                // second call: run the search now that the preference is stored
+              .withSuccessHandler(returnBack)                // returnBack() displays the result message in the sidebar
+              .withFailureHandler(handleError)               // handleError() shows any server-side exception in red
+              .driveLister(searchString, incFiles, incFolders); // pass the search text and file/folder toggles to the main search function
+          })
+          .withFailureHandler(handleError)                   // if saving the preference fails, surface the error
+          .setSearchMyDrive(myDriveChecked);                 // pass the checkbox state to the backend to store in script properties
+
+      } else {                                               // Shared Drives mode — the myDrives sheet already knows which drives to search
+        google.script.run                                    // single call: search directly, no preference to save first
+          .withSuccessHandler(returnBack)                    // returnBack() displays the result message
+          .withFailureHandler(handleError)                   // handleError() surfaces any error
+          .driveLister(searchString, incFiles, incFolders);  // pass the search text and file/folder toggles to the main search function
+      }
+    }
+
+    /**
+     * returnBack — success handler called by Apps Script when driveLister() completes.
+     * Hides the spinner, re-enables the Search button, and shows the result message.
+     *
+     * @param {string} message  HTML string returned by driveLister() — e.g. "Found Records".
+     */
+    function returnBack(message) {
+      document.getElementById('spinner').style.display  = 'none';   // hide the loading spinner now that the search is done
+      document.getElementById('btnSearch').disabled     = false;     // re-enable the Search button for the next search
+      document.getElementById('displayReturn').innerHTML = message;  // show the result (e.g. "Found Records" or "No Records Found")
+    }
+
+    /**
+     * handleError — called if any Apps Script call throws an exception (during
+     * drive detection or during a search). Ensures the error is always visible
+     * by revealing the search UI if detection failed before the UI was shown.
+     * Re-enables the Search button and shows the error message in red.
+     *
+     * @param {Error} err  The error object passed back by Apps Script.
+     */
+    function handleError(err) {
+      if (document.getElementById('searchUI').style.display === 'none') { // if this error happened during drive detection, the search UI isn't visible yet
+        document.getElementById('initLoading').style.display = 'none';    // hide the loading spinner
+        document.getElementById('searchUI').style.display    = 'block';   // reveal the search UI so the error message below has somewhere to appear
+      }
+      document.getElementById('spinner').style.display  = 'none';         // hide the search spinner (a no-op if detection failed before any search ran)
+      document.getElementById('btnSearch').disabled     = false;           // re-enable the Search button (a no-op if detection failed before the button was disabled)
+      document.getElementById('displayReturn').innerHTML =
+        '<span style="color:#d93025">Error: ' + err.message + '</span>';   // show the error message in Google's red so it's impossible to miss
+    }
+
+    /**
+     * clearSearch — resets the form back to its initial empty state.
+     * No parameters. No return value.
+     */
+    function clearSearch() {
+      document.getElementById('searchString').value     = '';   // empty the text input
+      document.getElementById('displayReturn').innerHTML = '';  // clear the result or error message
+      document.getElementById('searchString').focus();          // put the cursor back in the input, ready for the next search
+    }
+
+    // Allow the user to kick off a search by pressing Enter in the text field —
+    // same as clicking the Search button.
+    document.getElementById('searchString').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') submitSearch(); // Enter key triggers the same action as clicking Search
+    });
+  </script>
+</html>

@@ -60,9 +60,8 @@
 <p>The App is a reporting tool, built for people who need to know <em>where</em> something lives in their Drive estate and <em>who</em> can see it. Useful for tidying up after departed contractors, auditing what's been shared with personal Gmail addresses, or just finding that one file someone swears exists somewhere in the company drives.</p>
 
 <div class="links-row">
-    <a href="https://github.com/greataicoding/file-searching-scripts">View on GitHub</a>
-    <a href="privacy-policy.html">Privacy Policy</a>
-    <a href="terms-of-service.html">Terms of Service</a>
+    <a href="https://greataicoding.avdisplay.com//drive-auditor/privacy-policy.html">Privacy Policy</a>
+    <a href="https://greataicoding.avdisplay.com//drive-auditor/terms-of-service.html">Terms of Service</a>
 </div>
 
 <h2>What It Does</h2>
@@ -76,40 +75,15 @@
     <li><strong>Works on consumer Gmail too</strong> — if you don't have Shared Drives, it falls back to a simple "Search My Drive" mode.</li>
 </ul>
 
-<h2>How to Install</h2>
-<p>The App is currently distributed as an open-source Apps Script project. Full installation steps are in the <a href="https://github.com/greataicoding/file-searching-scripts#setup--installation">README on GitHub</a>. The short version:</p>
-<ol>
-    <li>Create a new Google Sheets spreadsheet.</li>
-    <li>Open Extensions → Apps Script.</li>
-    <li>Copy the contents of <code>listFilesFound.gs</code>, <code>searchInput.html</code>, <code>css.html</code>, and <code>appsscript.json</code> from the repo.</li>
-    <li>Enable the Drive API advanced service (Services → Drive API → v3).</li>
-    <li>Reload the spreadsheet — the <strong>File Search</strong> menu will appear.</li>
-</ol>
-<p>A Google Workspace™ Marketplace edition is in development — once published, it'll be installable in one click.</p>
-
-<h2>Editions</h2>
-
-<h3>Community edition (current)</h3>
-<p>Open-source, manually installed, with the full feature set including external-sharing detection. Uses Google's <code>drive.readonly</code> scope to support full-text content search.</p>
-
-<h3>Marketplace Pro edition (in development)</h3>
-<p>One-click install via the Google Workspace™ Marketplace, with the narrower <code>drive.metadata.readonly</code> scope (no file content access). Plus Pro features:</p>
-<ul>
-    <li>Permission mining with a dedicated audit view</li>
-    <li>Organisation-aware risk detection (proper external-user flagging)</li>
-    <li>Scheduled snapshots — re-run searches every 24 hours and track what's changed</li>
-    <li>Bulk permission remediation — revoke access for a specific user across many files at once</li>
-</ul>
-
-<div class="warning-box">
-    <strong>About permissions:</strong> The Community edition requests Google's <code>drive.readonly</code> scope, which lets it read any file in your Drive and any Shared Drive you have access to. It's read-only — it can't modify, move, or delete anything — and all processing happens inside your own Google account. Nothing is sent anywhere external. The full code is open-source so you can verify exactly what it does. The forthcoming Marketplace edition will use the narrower <code>drive.metadata.readonly</code> scope, which avoids file content access entirely. <a href="https://github.com/greataicoding/file-searching-scripts#️-heads-up-drive-read-permissions">Read more about why these scopes are needed.</a>
-</div>
-
 <h2>Privacy & Data</h2>
-<p>The App does not transmit, store, or share any data outside of your Google account. All searching, processing, and reporting happens entirely within Google Apps Script™ — there are no external servers, no databases, and no third-party services involved. See the <a href="privacy-policy.html">Privacy Policy</a> for full details.</p>
+<p>The App does not transmit, store, or share any data outside of your Google account. All searching, processing, and reporting happens entirely within Google Apps Script™ — there are no external servers, no databases, and no third-party services involved. See the <a href="https://greataicoding.avdisplay.com/drive-auditor/privacy-policy.html">Privacy Policy</a> for full details.</p>
 
-<h2>Support</h2>
-<p>For questions, bug reports, or feature requests, please open an issue on the <a href="https://github.com/greataicoding/file-searching-scripts/issues">GitHub repository</a>.</p>
+
+<h2>Contact Us</h2>
+<p>For bug reports, feature requests, or other questions:</p>
+<ul>
+    <li><strong>Email:</strong> <a href="mailto:greataicoding@gmail.com">greataicoding@gmail.com</a></li>
+</ul>
 
 <p style="font-size:0.8em; color:#666; margin-top:3em; padding-top:1em; border-top:1px solid #eee;">
 File Search & Auditor for Google Drive™ is an independent open-source project. Google Drive™, Google Sheets™, Google Workspace™, and Google Apps Script™ are trademarks of Google LLC. The App is not affiliated with or endorsed by Google LLC.

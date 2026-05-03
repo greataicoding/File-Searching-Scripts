@@ -1,0 +1,72 @@
+Smart move. Waiting for Google’s feedback on the Gmail Cleaner before writing more code is a disciplined engineering approach. It prevents "technical debt" from piling up if they ask for significant architectural changes to your OAuth flow.
+
+Resurrecting your **Drive Search & Auditor** tool is the perfect next priority. Because it relies on **metadata** rather than email content, it is often easier to pass through the Marketplace review process.
+
+### 1. The "Pro" Strategy: From Script to Product
+To move this from a personal script to a Marketplace-ready "Auditor," you should tier your features.
+
+| Feature Tier | Open-Source / Basic | **Marketplace "Pro" (Passive Income)** |
+| :--- | :--- | :--- |
+| **Search Scope** | Single Drive search. | **Cross-Drive Aggregator:** Search all Shared Drives simultaneously. |
+| **Audit Depth** | Filename & Hyperlink. | **Risk Detection:** Highlight files shared "Externally" or with "Anyone with the link". |
+| **Automation** | Manual execution. | **Scheduled Snapshots:** Auto-update the spreadsheet every 24 hours to track new files. |
+| **Bulk Actions** | Read-only results. | **Permission Remediation:** Bulk-revoke access for a specific ex-employee directly from the sheet. |
+
+### 2. The Technical "OAuth" Win
+The biggest advantage of the Drive Search tool is the scope selection.
+* **Avoid the "Restricted" Trap:** The full `https://www.googleapis.com/auth/drive` scope is "Restricted" and requires a $10,000+ annual security assessment.
+* **The "Sensitive" Alternative:** Use `https://www.googleapis.com/auth/drive.metadata.readonly`. This is a **Sensitive** scope (not Restricted). It allows you to search and list files, sizes, and permissions without the expensive security audit.
+* **Transparency:** Users are 5x more likely to install a tool that says "I can only see your file names" versus "I can read/delete all your files".
+
+### 3. Resurrection Checklist
+When you "take the script out of the cupboard," run it through this AI-assisted checklist:
+
+1.  **Upgrade to Advanced Drive Service (v3):** Ensure you are using the Advanced Service rather than the basic `DriveApp`. This is required to search **Shared Drives** effectively using the `supportsAllDrives: true` and `includeItemsFromAllDrives: true` parameters.
+2.  **Add "Permission Mining":** Use the `permissions` field in your `Drive.Files.list()` call. This allows you to identify *who* has access to each file, which is the #1 reason businesses pay for Drive auditors.
+3.  **Implement Pagination:** For large organizations, a search might return 10,000+ files. Use `nextPageToken` to ensure your script doesn't time out and can handle massive Drive environments.
+4.  **UI Feedback:** Replace `Logger.log` with a custom sidebar or status bar in the Google Sheet so users see "Searching... 450 files found" in real-time.
+
+### 4. Market Positioning
+Since the Mail Merge market is saturated, position this as a **"Security & Compliance Auditor."**
+* **Target Audience:** Small-to-medium business owners who are terrified that an ex-contractor still has access to their "Internal Only" Shared Drives.
+* **The "Aha" Moment:** The first time they run the script and it highlights 50 files shared with personal `@gmail.com` addresses, they will see the immediate value in the Pro version.
+
+**Which part of the old script do you think will be the trickiest to "clean up"—the multi-drive searching logic or the permission reporting?**
+
+quick question - although the file search scripts will run as apps on a spreadsheet, is it better to work on the scripts in script.google.com or just edit them whilst using the host spreadsheet?
+
+For professional development intended for the Google Workspace Marketplace, the best approach is a **hybrid workflow**: develop locally using AI tools, prototype in the host spreadsheet, and publish as a standalone project.
+
+While bound scripts are convenient for quick fixes, standalone scripts are the standard for scalable, marketable applications.
+
+### 1. The Prototyping Phase: Use the Host Spreadsheet (Bound)
+When you are first getting your "Drive Searcher" script working, it is easier to work within the **host spreadsheet**.
+* **Instant UI Access:** Bound scripts have "special privileges," such as calling `getUi()` to create custom menus, dialogs, and sidebars without needing specific file IDs.
+* **Contextual Methods:** You can use `getActiveSpreadsheet()` or `getActiveRange()` to instantly hook into what the user is currently looking at.
+* **Simple Triggers:** Functions like `onOpen()` run automatically when the file is opened, making it easy to test your menu items in real-time.
+
+### 2. The Publication Phase: Use `script.google.com` (Standalone)
+Google officially recommends developing Marketplace add-ons as **standalone scripts**.
+* **Independent Life:** A standalone script appears as its own file in Google Drive and isn't tied to a single spreadsheet.
+* **Marketplace Deployment:** Professional add-ons are defined by Apps Script projects that should ideally be placed in a **Shared Drive** for better ownership management.
+* **Version Control:** It is much easier to manage deployments, versions, and Google Cloud project associations from a standalone project at `script.google.com`.
+
+### 3. The "AI-Power User" Workflow: Using `clasp`
+Since you are using **Claude Code**, **Gemini**, and **ChatGPT**, you should not be spending most of your time in the browser-based editor at all.
+* **Local Development:** Use the **`clasp` tool** (Command Line Apps Script Projects) to clone your project to your computer.
+* **AI Advantage:** Developing locally allows **Claude Code** to read your entire codebase at once, identifying structural issues or potential API timeouts (like pagination needs) much faster than a manual review.
+* **Push to Cloud:** Once the AI has helped you write or debug the code, you simply run `clasp push` to sync it to either your bound or standalone project.
+
+### Summary Comparison
+
+| Feature | Bound Script (Host Sheet) | Standalone Script (`script.google.com`) |
+| :--- | :--- | :--- |
+| **Best For** | Prototyping & UI testing. | Final Marketplace publication. |
+| **UI Control** | Direct `getUi()` access. | Must use document IDs or Add-on triggers. |
+| **Visibility** | Hidden; not in Google Drive. | Visible as a file in Drive. |
+| **Risk** | Deleting the sheet deletes the script. | Script lives independently of the sheet. |
+| **Performance** | Faster "hooking" into the sheet. | Minor overhead using `openById()`. |
+
+**Recommendation:** Start the Drive Searcher as a **bound script** in a fresh spreadsheet to quickly refine the search logic and the sheet-writing performance. Once the logic is stable, use **`clasp`** to move the code into a **standalone project** for the Marketplace approval process.
+
+**Would you like me to draft a `clasp` setup guide or a prompt to help Claude Code structure the initial "Drive Searcher" logic?**
